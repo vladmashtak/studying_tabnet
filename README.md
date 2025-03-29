@@ -15,3 +15,6 @@ docker run --gpus all -it --rm -p 8888:8888 -v ${PWD}:/workspace tabnet_jupyter_
 
 # Run Local Jupyter
 http://127.0.0.1:8888/tree
+
+# Dataset source
+https://data.binance.vision/?prefix=data/
