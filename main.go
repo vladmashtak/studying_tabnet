@@ -241,6 +241,10 @@ func main() {
 		panic(fmt.Sprintf("Ошибка записи итогового CSV: %v", err))
 	}
 
+	if err := normalizeCSV(outCSV); err != nil {
+		panic(fmt.Sprintf("Ошибка нормализации CSV: %v", err))
+	}
+
 	fmt.Printf("датасет сохранён в %s\n", outCSV)
 }
 
@@ -347,5 +351,53 @@ func writeCSV(filePath string, data [][]string) error {
 			return err
 		}
 	}
+	return nil
+}
+
+func normalizeCSV(fileName string) error {
+	f, err := os.Open(fileName)
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	reader := csv.NewReader(f)
+	records, err := reader.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	const openingTimeIndex = 0
+	const closingTimeIndex = 6
+
+	for i, record := range records {
+		openTime := record[openingTimeIndex]
+		closeTime := record[closingTimeIndex]
+
+		if len(openTime) == 16 {
+			records[i][openingTimeIndex] = openTime[0:13]
+		}
+
+		if len(closeTime) == 16 {
+			records[i][closingTimeIndex] = closeTime[0:13]
+		}
+	}
+
+	out, err := os.Create("dataset_normalized.csv")
+	if err != nil {
+		return err
+	}
+
+	defer out.Close()
+
+	writer := csv.NewWriter(out)
+	defer writer.Flush()
+	for _, record := range records {
+		if err := writer.Write(record); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
