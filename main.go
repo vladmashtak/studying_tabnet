@@ -370,6 +370,7 @@ func normalizeCSV(fileName string) error {
 
 	const openingTimeIndex = 0
 	const closingTimeIndex = 6
+	const ignoreIndex = 11 // ignore last useless column
 
 	for i, record := range records {
 		openTime := record[openingTimeIndex]
@@ -394,7 +395,7 @@ func normalizeCSV(fileName string) error {
 	writer := csv.NewWriter(out)
 	defer writer.Flush()
 	for _, record := range records {
-		if err := writer.Write(record); err != nil {
+		if err := writer.Write(record[0:ignoreIndex]); err != nil {
 			return err
 		}
 	}
