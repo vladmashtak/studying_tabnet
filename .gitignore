@@ -1,0 +1,8 @@
+*.iml
+*.ipymb
+
+
+
+/.idea/
+/.ipynb_checkpoints/
+/test_tabnet.ipynb
