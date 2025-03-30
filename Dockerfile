@@ -4,6 +4,7 @@ RUN pip install --upgrade pip
 RUN pip install \
     pytorch-tabnet \
     pandas \
+    pandas_ta \
     numpy \
     matplotlib \
     scikit-learn \
